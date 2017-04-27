@@ -1,0 +1,22 @@
+{
+  "name": "instant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qsz13/instant.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qsz13/instant/issues"
+  },
+  "homepage": "https://github.com/qsz13/instant#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
