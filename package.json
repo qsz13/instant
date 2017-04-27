@@ -17,6 +17,11 @@
   },
   "homepage": "https://github.com/qsz13/instant#readme",
   "dependencies": {
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "pg": "^6.1.5",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.3",
+    "sequelize": "^3.30.4"
   }
 }

@@ -1,11 +1,16 @@
 var express = require('express')
-var app = express()
+var Spider = require('./spider/spider')
+var config = require('./config')
 
+var app = express()
 app.get('/', function (req, res) {
   res.send('Hello World!')
 })
-var port = process.env.PORT || 3000;
 
-app.listen(port, function () {
+
+app.listen(config.PORT, function () {
   console.log('Example app listening on port 3000!')
 })
+
+var spider = new Spider();
+spider.start()
