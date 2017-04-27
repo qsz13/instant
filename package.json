@@ -1,6 +1,9 @@
 {
   "name": "instant",
   "version": "1.0.0",
+  "engines": {
+      "node": "7.9.0"
+    },
   "description": "",
   "main": "index.js",
   "scripts": {
