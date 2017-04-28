@@ -18,6 +18,9 @@ module.exports = function (sequelize, DataTypes) {
         },
         description: {
             type: DataTypes.TEXT
+        },
+        type: {
+            type: DataTypes.STRING
         }
     }, {
             freezeTableName: true,

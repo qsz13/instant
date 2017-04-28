@@ -24,9 +24,9 @@ function getAllComment() {
 
 function saveAllComment(data, type) {
     if (type == JandanType.PIC) {
-        sourceQuery = { where: { name: 'Jandan Pic', link: config.jandan.PIC_API_URL } }
+        sourceQuery = { where: { name: 'Jandan Pic', link: config.jandan.PIC_API_URL, type: "api" } }
     } else if (type == JandanType.OOXX) {
-        sourceQuery = { where: { name: 'Jandan OOXX', link: config.jandan.OOXX_API_URL } }
+        sourceQuery = { where: { name: 'Jandan OOXX', link: config.jandan.OOXX_API_URL, type: 'api' } }
     }
     models.Source.findOrCreate(sourceQuery).spread(function (source, created) {
         for (var d in data) {
