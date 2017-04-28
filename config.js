@@ -3,7 +3,7 @@ var config = {};
 config.jandan = {};
 
 config.PORT = process.env.PORT || 3000;
-config.SPIDER_INTERVAL = 60 * 1000;
+config.SPIDER_INTERVAL = 300 * 1000;
 config.DATABASE_URL = process.env.DATABASE_URL || "postgres://postgres:postgres@127.0.0.1:5432/instant?sslmode=disable"
 
 // jandan

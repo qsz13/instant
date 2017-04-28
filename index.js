@@ -1,5 +1,5 @@
 var server = require('./api')
-var Spider = require('./spider/spider')
+var Spider = require('./spider')
 var config = require('./config')
 var models = require('./models');
 
