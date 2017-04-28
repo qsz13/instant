@@ -2,25 +2,25 @@ var jandan = require("./jandan")
 var config = require("../config")
 
 class Spider {
-    constructor () {
+    constructor() {
         this.jandanAPISpider = this.jandanAPISpider.bind(this);
     }
 
     async start() {
 
-        while(true) {
+        while (true) {
             await Promise.all([
                 this.jandanAPISpider(),
                 this.timeout(config.SPIDER_INTERVAL)
             ])
-        }   
+        }
     }
 
     timeout(ms) {
         return new Promise((resolve, reject) => setTimeout(resolve, ms));
     }
 
-  
+
     jandanAPISpider() {
         jandan.getAllComment()
     }
@@ -28,8 +28,8 @@ class Spider {
 
     }
 
-    
-    
+
+
 }
 
 module.exports = Spider;

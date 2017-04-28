@@ -1,40 +1,44 @@
 "use strict";
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   var Entry = sequelize.define('Entry', {
-    id:{
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
     },
     entry_id: {
-        type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: 'entrySourceKey'
     },
-    title:{
+    title: {
       type: DataTypes.STRING
     },
     link: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
-    description:{
-      type: DataTypes.STRING
+    description: {
+      type: DataTypes.TEXT
     },
-    content:{
-      type:DataTypes.STRING
+    content: {
+      type: DataTypes.TEXT
+    },
+    score: {
+      type: DataTypes.INTEGER,
+      unique: 'entrySourceKey'
     }
   }, {
-    freezeTableName: true,
-    classMethods: {
-      associate: function(models) {
-        Entry.belongsTo(models.Source, {
-          onDelete: "CASCADE",
-          foreignKey: {
-            allowNull: false
-          }
-        });
+      freezeTableName: true,
+      classMethods: {
+        associate: function (models) {
+          Entry.belongsTo(models.Source, {
+            foreignKey: {
+              allowNull: false
+            }
+          });
+        }
       }
-}
-  }
+    }
   );
   return Entry
 }
