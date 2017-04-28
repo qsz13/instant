@@ -2,8 +2,8 @@
   "name": "instant",
   "version": "1.0.0",
   "engines": {
-      "node": "7.9.0"
-    },
+    "node": "7.9.0"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,11 +20,12 @@
   },
   "homepage": "https://github.com/qsz13/instant#readme",
   "dependencies": {
-    "express": "^4.15.2",
     "pg": "^6.1.5",
     "pg-hstore": "^2.3.2",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
+    "restify": "^4.3.0",
+    "restify-plugins": "^1.6.0",
     "sequelize": "^3.30.4"
   }
 }
