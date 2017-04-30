@@ -9,7 +9,7 @@ class Spider {
 
     async start() {
         while (true) {
-            await this.jandanAPISpider();
+            // await this.jandanAPISpider();
             await this.rssSpider();
             await this.timeout(config.SPIDER_INTERVAL);
         }

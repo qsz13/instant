@@ -13,7 +13,8 @@ module.exports = (server) => {
         if (req.body == null) {
             res.send({ 'code': 'failed', 'message': 'cannot parse request body.' })
         }
-        else{
+        else {
+            console.log(req.body)
             var rss = {
                 name: req.body.name,
                 image: req.body.image,

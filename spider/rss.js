@@ -75,7 +75,6 @@ function maybeTranslate(res, charset) {
 exports.saveRSSSource = async function (rss) {
     return await getRSSFeed(rss.link, (stream) => {
         var meta = stream.meta
-        rss.link = meta.link
         if (rss.name == null) {
             rss.name = meta.title
         }
@@ -92,11 +91,12 @@ exports.saveRSSSource = async function (rss) {
 
 exports.getAllRss = async function () {
     var sourceList = await models.Source.getSourcesOfType("rss")
-    for (var i in sourceList) {
-        var source = sourceList[i]
-        await getRSSFeed(source.link, function (stream) {
+
+    sourceList.forEach((source) => {
+        getRSSFeed(source.link, function (stream) {
             var item;
             while (item = stream.read()) {
+                console.log(source.id)
                 var entry = {
                     entry_id: item.guid,
                     title: item.title,
@@ -109,8 +109,7 @@ exports.getAllRss = async function () {
             }
 
         })
-
-    }
+    })
 
 
 
