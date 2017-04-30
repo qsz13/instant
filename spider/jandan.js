@@ -10,6 +10,7 @@ JandanType = {
 }
 
 async function getCommentByAPI(jandanType) {
+
     if (jandanType == JandanType.PIC) {
         json = await rp({ uri: config.jandan.PIC_API_URL, json: true })
         await saveAllComment(json['comments'], JandanType.PIC)

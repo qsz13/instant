@@ -96,7 +96,6 @@ exports.getAllRss = async function () {
         getRSSFeed(source.link, function (stream) {
             var item;
             while (item = stream.read()) {
-                console.log(source.id)
                 var entry = {
                     entry_id: item.guid,
                     title: item.title,
@@ -110,10 +109,5 @@ exports.getAllRss = async function () {
 
         })
     })
-
-
-
-
-
 
 }

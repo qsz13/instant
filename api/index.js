@@ -13,9 +13,10 @@ server.pre(restify.pre.userAgentConnection());
 server.use(plugins.acceptParser(server.acceptable));
 server.use(plugins.queryParser());
 server.use(plugins.bodyParser());
+server.use(restify.queryParser());
 server.use(paginate(server));
 
-server.on('uncaughtException', function(err, req, res, route) {
+server.on('uncaughtException', function (err, req, res, route) {
     console.error('uncaught exception!' + err.message);
 });
 
