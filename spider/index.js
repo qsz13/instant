@@ -1,4 +1,5 @@
 var jandan = require("./jandan")
+var rss = require("./rss")
 var config = require("../config")
 
 class Spider {
@@ -7,12 +8,10 @@ class Spider {
     }
 
     async start() {
-
         while (true) {
-            await Promise.all([
-                this.jandanAPISpider(),
-                this.timeout(config.SPIDER_INTERVAL)
-            ])
+            await this.jandanAPISpider();
+            await this.rssSpider();
+            await this.timeout(config.SPIDER_INTERVAL);
         }
     }
 
@@ -21,9 +20,14 @@ class Spider {
     }
 
 
-    jandanAPISpider() {
-        jandan.getAllComment()
+    async jandanAPISpider() {
+        await jandan.getAllComment();
     }
+
+    async rssSpider() {
+        await rss.getAllRss();
+    }
+
     jandanTopSpider() {
 
     }

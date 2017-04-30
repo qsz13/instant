@@ -9,17 +9,19 @@ JandanType = {
     OOXX: 1
 }
 
-function getCommentByAPI(jandanType) {
+async function getCommentByAPI(jandanType) {
     if (jandanType == JandanType.PIC) {
-        rp({ uri: config.jandan.PIC_API_URL, json: true }).then((json) => { saveAllComment(json['comments'], JandanType.PIC) })
+        json = await rp({ uri: config.jandan.PIC_API_URL, json: true })
+        await saveAllComment(json['comments'], JandanType.PIC)
     } else if (jandanType = JandanType.OOXX) {
-        rp({ uri: config.jandan.OOXX_API_URL, json: true }).then((json) => { saveAllComment(json['comments'], JandanType.OOXX) })
+        json = await rp({ uri: config.jandan.OOXX_API_URL, json: true })
+        await saveAllComment(json['comments'], JandanType.OOXX)
     }
 }
 
-function getAllComment() {
-    getCommentByAPI(JandanType.PIC)
-    getCommentByAPI(JandanType.OOXX)
+async function getAllComment() {
+    await getCommentByAPI(JandanType.PIC)
+    await getCommentByAPI(JandanType.OOXX)
 }
 
 function saveAllComment(data, type) {
@@ -30,7 +32,7 @@ function saveAllComment(data, type) {
     }
     models.Source.findOrCreate(sourceQuery).spread(function (source, created) {
         for (var d in data) {
-            models.Entry.upsert({
+            models.Entry.saveEntry({
                 entry_id: data[d].comment_ID,
                 title: '',
                 link: data[d].pics.join('\n'),
@@ -38,8 +40,6 @@ function saveAllComment(data, type) {
                 content: data[d].comment_content.trim(),
                 score: getScore(data[d].vote_positive, data[d].vote_negative),
                 SourceId: source.get('id')
-            }).catch((err) => {
-                console.log(err)
             })
         }
     })

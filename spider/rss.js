@@ -89,3 +89,32 @@ exports.saveRSSSource = async function (rss) {
     })
 
 }
+
+exports.getAllRss = async function () {
+    var sourceList = await models.Source.getSourcesOfType("rss")
+    for (var i in sourceList) {
+        var source = sourceList[i]
+        await getRSSFeed(source.link, function (stream) {
+            var item;
+            while (item = stream.read()) {
+                var entry = {
+                    entry_id: item.guid,
+                    title: item.title,
+                    link: item.link,
+                    description: item.description,
+                    content: item.content,
+                    SourceId: source.id
+                }
+                models.Entry.saveEntry(entry);
+            }
+
+        })
+
+    }
+
+
+
+
+
+
+}

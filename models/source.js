@@ -31,5 +31,11 @@ module.exports = function (sequelize, DataTypes) {
                 }
             }
         });
+
+    Source.getSourcesOfType = async function (type) {
+        return await Source.findAll({ where: { type: type }, raw: true })
+    }
+
+
     return Source
 }

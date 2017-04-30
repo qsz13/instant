@@ -40,5 +40,15 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   );
+
+  Entry.saveEntry = function (entry) {
+    Entry.upsert(entry).catch((err) => {
+      console.log(err)
+    })
+  }
+
+
+
+
   return Entry
 }
