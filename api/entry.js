@@ -24,7 +24,7 @@ module.exports = (server) => {
     server.get('/entry', async (req, res, next) => {
         try {
             const results = await models.Entry.findAndCountAll({
-                offset: req.paginate.page * req.paginate.per_page,
+                offset: (req.paginate.page - 1) * req.paginate.per_page,
                 limit: req.paginate.per_page,
                 order: [['createdAt', 'DESC']]
             })

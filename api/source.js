@@ -5,8 +5,18 @@ var rssspider = require("../spider/rss")
 module.exports = (server) => {
 
     server.get('/source', async (req, res, next) => {
-        const results = await models.Source.findAll();
-        res.send(results);
+        try {
+            const results = await models.Source.findAndCountAll({
+                offset: (req.paginate.page - 1) * req.paginate.per_page,
+                limit: req.paginate.per_page,
+                order: [['createdAt', 'DESC']]
+            })
+            res.charSet('utf-8');
+            res.paginate.send(results.rows, results.count);
+
+        } catch (error) {
+            res.send({ 'code': 'failed', 'message': error.message })
+        }
     });
 
     server.post("/rss-source", async (req, res, next) => {
