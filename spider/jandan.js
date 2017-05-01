@@ -40,15 +40,20 @@ function saveAllComment(data, type) {
                 score: getScore(data[d].vote_positive, data[d].vote_negative),
                 SourceId: source.get('id')
             }
-            await models.Entry.upsert(entry)
-            entry = await models.Entry.findOne({ where: { entry_id: entry.entry_id, SourceId: entry.SourceId }, raw: true })
-            console.log(entry)
-            // entry = models.Entry.
+            var created = await models.Entry.upsert(entry)
+            if (created) {
+                entry = await models.Entry.findOne({ where: { entry_id: entry.entry_id, SourceId: entry.SourceId }, raw: true })
+                var picArr = []
+                data[d].pics.forEach((pic) => {
+                    picArr.push({ url: pic, EntryId: entry.id })
+                })
+                models.Image.bulkCreate(picArr)
+            }
+
         }
     })
 }
 
-// data[d].pics.join('\n')
 
 function getScore(oo, xx) {
     return oo - xx
