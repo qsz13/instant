@@ -1,6 +1,7 @@
 var config = {};
 
 config.jandan = {};
+config.newsapi = {};
 
 config.PORT = process.env.PORT || 3000;
 config.SPIDER_INTERVAL = 300 * 1000;
@@ -11,4 +12,6 @@ config.jandan.OOXX_API_URL = "http://jandan.net/?oxwlxojflwblxbsapi=jandan.get_o
 config.jandan.PIC_API_URL = "http://jandan.net/?oxwlxojflwblxbsapi=jandan.get_pic_comments&page=1"
 config.jandan.URL = "http://jandan.net"
 
+// newsapi
+config.newsapi.URL = "https://newsapi.org/v1/sources?language=en"
 module.exports = config;

@@ -1,5 +1,3 @@
-var request = require('request');
-var config = require('../config')
 var rp = require('request-promise-native');
 var models = require('../models')
 var config = require('../config')
