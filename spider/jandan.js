@@ -31,20 +31,24 @@ function saveAllComment(data, type) {
     } else if (type == JandanType.OOXX) {
         sourceQuery = { where: { name: 'Jandan OOXX', link: config.jandan.OOXX_API_URL, type: 'api' } }
     }
-    models.Source.findOrCreate(sourceQuery).spread(function (source, created) {
+    models.Source.findOrCreate(sourceQuery).spread(async function (source, created) {
         for (var d in data) {
-            models.Entry.saveEntry({
+            var entry = {
                 entry_id: data[d].comment_ID,
-                title: '',
-                link: data[d].pics.join('\n'),
                 description: data[d].text_content.trim(),
                 content: data[d].comment_content.trim(),
                 score: getScore(data[d].vote_positive, data[d].vote_negative),
                 SourceId: source.get('id')
-            })
+            }
+            await models.Entry.upsert(entry)
+            entry = await models.Entry.findOne({ where: { entry_id: entry.entry_id, SourceId: entry.SourceId }, raw: true })
+            console.log(entry)
+            // entry = models.Entry.
         }
     })
 }
+
+// data[d].pics.join('\n')
 
 function getScore(oo, xx) {
     return oo - xx

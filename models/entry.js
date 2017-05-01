@@ -25,6 +25,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     score: {
       type: DataTypes.INTEGER,
+    },
+    SourceId: {
+      type: DataTypes.INTEGER,
       unique: 'entrySourceKey'
     }
   }, {
@@ -36,16 +39,11 @@ module.exports = function (sequelize, DataTypes) {
               allowNull: false
             }
           });
+          Entry.hasMany(models.Image);
         }
       }
     }
   );
-
-  Entry.saveEntry = function (entry) {
-    Entry.upsert(entry).catch((err) => {
-      console.log(err)
-    })
-  }
 
 
 
