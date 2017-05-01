@@ -97,12 +97,12 @@ exports.getAllRss = async function () {
             var item;
             while (item = stream.read()) {
                 var entry = {
-                    entry_id: item.guid,
+                    eid: item.guid,
                     title: item.title,
                     link: item.link,
                     description: item.description,
                     content: item.content,
-                    SourceId: source.id
+                    source_id: source.id
                 }
                 models.Entry.saveEntry(entry);
             }

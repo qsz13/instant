@@ -8,17 +8,17 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true
         },
         sid: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             unique: true
         },
         name: {
-            type: DataTypes.STRING
+            type: DataTypes.TEXT
         },
         image: {
-            type: DataTypes.STRING
+            type: DataTypes.TEXT
         },
         link: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             unique: true
         },
         description: {
@@ -28,6 +28,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING
         }
     }, {
+            underscored: true,
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {

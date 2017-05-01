@@ -5,9 +5,8 @@ module.exports = (server) => {
 
     server.get('/source/:id/entry', async (req, res, next) => {
         try {
-            console.log(req.paginate.page * req.paginate.per_page)
             const results = await models.Entry.findAndCountAll({
-                where: { SourceId: req.params.id },
+                where: { source_id: req.params.id },
                 offset: (req.paginate.page - 1) * req.paginate.per_page,
                 limit: req.paginate.per_page,
                 order: [['createdAt', 'DESC']]

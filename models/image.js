@@ -8,10 +8,15 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true
         },
         url: {
-            type: DataTypes.STRING,
-            unique: true
+            type: DataTypes.TEXT,
+            unique: "entry_image_unique"
+        },
+        entry_id: {
+            type: DataTypes.INTEGER,
+            unique: "entry_image_unique"
         }
     }, {
+            underscored: true,
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {

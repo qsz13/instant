@@ -24,7 +24,6 @@ module.exports = (server) => {
             res.send({ 'code': 'failed', 'message': 'cannot parse request body.' })
         }
         else {
-            console.log(req.body)
             var rss = {
                 name: req.body.name,
                 image: req.body.image,

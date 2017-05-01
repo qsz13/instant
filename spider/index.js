@@ -10,8 +10,8 @@ class Spider {
 
     async start() {
         while (true) {
-            // await this.jandanAPISpider();
-            // await this.rssSpider();
+            await this.jandanAPISpider();
+            await this.rssSpider();
             await this.newsapiSpider();
             await this.timeout(config.SPIDER_INTERVAL);
         }

@@ -32,18 +32,18 @@ function saveAllComment(data, type) {
     models.Source.findOrCreate(sourceQuery).spread(async function (source, created) {
         for (var d in data) {
             var entry = {
-                entry_id: data[d].comment_ID,
+                eid: data[d].comment_ID,
                 description: data[d].text_content.trim(),
                 content: data[d].comment_content.trim(),
                 score: getScore(data[d].vote_positive, data[d].vote_negative),
-                SourceId: source.get('id')
+                source_id: source.get('id')
             }
             var created = await models.Entry.upsert(entry)
             if (created) {
-                entry = await models.Entry.findOne({ where: { entry_id: entry.entry_id, SourceId: entry.SourceId }, raw: true })
+                entry = await models.Entry.findOne({ where: { eid: entry.eid, source_id: entry.source_id }, raw: true })
                 var picArr = []
                 data[d].pics.forEach((pic) => {
-                    picArr.push({ url: pic, EntryId: entry.id })
+                    picArr.push({ url: pic, entry_id: entry.id })
                 })
                 models.Image.bulkCreate(picArr)
             }

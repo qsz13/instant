@@ -7,12 +7,12 @@ module.exports = function (sequelize, DataTypes) {
       autoIncrement: true,
       primaryKey: true
     },
-    entry_id: {
-      type: DataTypes.STRING,
-      unique: 'entrySourceKey'
+    eid: {
+      type: DataTypes.TEXT,
+      unique: 'entry_source_unique'
     },
     title: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     link: {
       type: DataTypes.TEXT
@@ -26,11 +26,15 @@ module.exports = function (sequelize, DataTypes) {
     score: {
       type: DataTypes.INTEGER,
     },
-    SourceId: {
+    published_at: {
+      type: DataTypes.DATE
+    },
+    source_id: {
       type: DataTypes.INTEGER,
-      unique: 'entrySourceKey'
+      unique: 'entry_source_unique'
     }
   }, {
+      underscored: true,
       freezeTableName: true,
       classMethods: {
         associate: function (models) {
