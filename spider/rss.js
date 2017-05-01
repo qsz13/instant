@@ -84,7 +84,9 @@ exports.saveRSSSource = async function (rss) {
         if (rss.image == null) {
             rss.image = meta.image.url
         }
-        return models.Source.upsert(rss)
+        return models.Source.upsert(rss).catch(function (err) {
+            console.log(err)
+        })
     })
 
 }
@@ -104,7 +106,9 @@ exports.getAllRss = async function () {
                     content: item.content,
                     source_id: source.id
                 }
-                models.Entry.saveEntry(entry);
+                models.Entry.saveEntry(entry).catch(function (err) {
+                    console.log(err)
+                });
             }
 
         })

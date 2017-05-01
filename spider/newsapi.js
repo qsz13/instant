@@ -37,13 +37,16 @@ async function getNewsSource() {
                 models.Entry.findOrCreate({ where: entry, raw: true }).spread((instance, created) => {
                     if (created && article.urlToImage != null) {
                         image = { url: article.urlToImage, entry_id: instance.id }
-                        models.Image.create(image).catch(Sequelize.ValidationError, function (err) {
+                        models.Image.create(image).catch(function (err) {
                             console.log(err)
                         })
                     }
-
+                }).catch(function (err) {
+                    console.log(err)
                 })
             })
+        }).catch(function (err) {
+            console.log(err)
         })
 
     })

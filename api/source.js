@@ -9,7 +9,7 @@ module.exports = (server) => {
             const results = await models.Source.findAndCountAll({
                 offset: (req.paginate.page - 1) * req.paginate.per_page,
                 limit: req.paginate.per_page,
-                order: [['createdAt', 'DESC']]
+                order: [['updated_at', 'DESC']]
             })
             res.charSet('utf-8');
             res.paginate.send(results.rows, results.count);
