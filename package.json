@@ -4,9 +4,10 @@
   "engines": {
     "node": "7.9.0"
   },
-  "description": "",
+  "description": "instant is a news app",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,13 +22,11 @@
   "homepage": "https://github.com/qsz13/instant#readme",
   "dependencies": {
     "feedparser": "^2.2.0",
-    "pg": "^6.1.5",
-    "pg-hstore": "^2.3.2",
+    "mongojs": "^2.4.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
     "restify": "^4.3.0",
     "restify-paginate": "0.0.4",
-    "restify-plugins": "^1.6.0",
-    "sequelize": "^3.30.4"
+    "restify-plugins": "^1.6.0"
   }
 }

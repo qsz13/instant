@@ -3,9 +3,10 @@ var config = {};
 config.jandan = {};
 config.newsapi = {};
 
-config.PORT = process.env.PORT || 3000;
+config.HOST = process.env.OPENSHIFT_NODEJS_PORT || "127.0.0.1"
+config.PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 config.SPIDER_INTERVAL = 300 * 1000;
-config.DATABASE_URL = process.env.DATABASE_URL || "postgres://postgres:postgres@127.0.0.1:5432/instant?sslmode=disable"
+config.DATABASE_URL = process.env.OPENSHIFT_MONGODB_DB_URL || "mongodb://127.0.0.1:27017/"
 
 // jandan
 config.jandan.OOXX_API_URL = "http://jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page=1"
@@ -16,5 +17,6 @@ config.jandan.URL = "http://jandan.net"
 config.newsapi.SOURCE_URL = "https://newsapi.org/v1/sources?language=en"
 config.newsapi.ARTICLE_URL = "https://newsapi.org/v1/articles"
 config.newsapi.API_KEY = "00e60e21d3b04652b7cdb57b94d478ba"
+
 
 module.exports = config;

@@ -11,8 +11,8 @@ exports.getAllNews = async function () {
 
 async function getNewsSource() {
     var response = await rp({ uri: config.newsapi.SOURCE_URL, json: true })
-    response.sources.forEach((ns) => {
-        models.Source.findOrCreate({
+    await response.sources.forEach(async (ns) => {
+        await models.Source.findOrCreate({
             where: { sid: ns.id, name: ns.name, link: ns.url, description: ns.description, type: "newsapi" }, raw: true
         }).spread(async (instance, created) => {
             if (ns.sortBysAvailable.indexOf("latest") > -1) {
@@ -24,23 +24,24 @@ async function getNewsSource() {
             }
             var article_url = config.newsapi.ARTICLE_URL + '?apiKey=' + config.newsapi.API_KEY + '&source=' + instance.sid + '&sortBy=' + sortBy
             var res = await rp({ uri: article_url, json: true })
-            res.articles.forEach((article) => {
+            await res.articles.forEach(async (article) => {
                 var entry = {
                     eid: article.url,
                     title: article.title,
                     link: article.url,
-
                     description: article.description,
                     published_at: article.publishedAt,
                     source_id: instance.id
                 }
-                models.Entry.findOrCreate({ where: entry, raw: true }).spread((instance, created) => {
-                    if (created && article.urlToImage != null) {
-                        image = { url: article.urlToImage, entry_id: instance.id }
-                        models.Image.create(image).catch(function (err) {
-                            console.log(err)
-                        })
-                    }
+                // console.log(entry)
+                await models.Entry.findOrCreate({ where: entry }).spread(async (instance, created) => {
+                    // if (created && article.urlToImage != null) {
+                    //     image = { url: article.urlToImage, entry_id: instance.id }
+                    //     await models.Image.create(image).catch(function (err) {
+                    //         console.log(err)
+                    //     })
+                    // }
+                    console.log(created)
                 }).catch(function (err) {
                     console.log(err)
                 })
