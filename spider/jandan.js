@@ -28,11 +28,11 @@ async function getCommentByAPI(jandanType) {
 function saveAllComment(data, type) {
     // console.log(data)
     if (type == JandanType.PIC) {
-        var source = { _id: "jandan-pic", name: "Jandan Pic", link: config.jandan.PIC_API_URL, description: "Jandan boring pics.", type: "api" }
+        var source = { _id: "jandan-pic", name: "Jandan Pic", link: config.jandan.PIC_API_URL, description: "Jandan boring pics.", type: "api", updatedAt: new Date() }
     } else if (type == JandanType.OOXX) {
-        var source = { _id: "jandan-ooxx", name: "Jandan OOXX", link: config.jandan.OOXX_API_URL, description: "Jandan Meizi pics.", type: "api" }
+        var source = { _id: "jandan-ooxx", name: "Jandan OOXX", link: config.jandan.OOXX_API_URL, description: "Jandan Meizi pics.", type: "api", updatedAt: new Date() }
     }
-    db.source.save(source, (err) => {
+    db.source.update({ _id: source._id }, { $set: source, $setOnInsert: { createdAt: new Date() } }, { upsert: true }, (err) => {
         data.forEach((e) => {
             var entry = {
                 eid: e.comment_ID,
@@ -40,9 +40,11 @@ function saveAllComment(data, type) {
                 content: e.comment_content.trim(),
                 images: e.pics,
                 score: getScore(e.vote_positive, e.vote_negative),
-                source_id: source._id
+                source_id: source._id,
+                updatedAt: new Date()
+
             }
-            db.entry.update({ eid: e.comment_ID, source_id: source._id }, entry, { upsert: true }, (err) => {
+            db.entry.update({ eid: e.comment_ID, source_id: source._id }, { $set: entry, $setOnInsert: { createdAt: new Date() } }, { upsert: true }, (err) => {
                 if (err) console.log(err);
             })
         })

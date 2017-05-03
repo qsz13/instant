@@ -10,8 +10,8 @@ exports.getAllNews = async function () {
         if (ns.sortBysAvailable.indexOf("latest") > -1) var sortBy = "latest"
         else var sortBy = "top"
         var article_url = config.newsapi.ARTICLE_URL + '?apiKey=' + config.newsapi.API_KEY + '&source=' + ns.id + '&sortBy=' + sortBy
-        var source = { _id: ns.id, name: ns.name, link: article_url, description: ns.description, type: "newsapi" }
-        db.source.save(source, async (err, doc) => {
+        var source = { _id: ns.id, name: ns.name, link: article_url, description: ns.description, type: "newsapi", updatedAt: new Date() }
+        db.source.update({ _id: source._id }, { $set: source, $setOnInsert: { createdAt: new Date() } }, { upsert: true }, async (err) => {
             if (err) console.log(err)
             var news = await getNews(source.link)
             news.forEach((article) => {
@@ -22,9 +22,10 @@ exports.getAllNews = async function () {
                     url: article.url,
                     description: article.description,
                     published_at: article.publishedAt,
-                    source_id: source._id
+                    source_id: source._id,
+                    updatedAt: new Date()
                 }
-                db.entry.update({ eid: article.url, source_id: source._id }, entry, { upsert: true }, (err) => { if (err) console.log(err) })
+                db.entry.update({ eid: article.url, source_id: source._id }, { $set: entry, $setOnInsert: { createdAt: new Date() } }, { upsert: true }, (err) => { if (err) console.log(err) })
             })
         })
     })
