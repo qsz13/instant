@@ -1,7 +1,7 @@
 var server = require('./api')
 var Spider = require('./spider')
 var config = require('./config')
-var db = require('./db')
+
 
 var spider = new Spider();
 

@@ -4,6 +4,7 @@ var models = require("../models")
 var config = require('../config')
 // var mongojs = require('mongojs')
 // var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
+var Source = require('../models/source')
 
 module.exports = (server) => {
 
@@ -11,8 +12,8 @@ module.exports = (server) => {
         try {
             var offset = (req.paginate.page - 1) * req.paginate.per_page
             var limit = req.paginate.per_page
-            db.source.count(null, (err, count) => {
-                db.source.find().sort({ 'updatedAt': -1 }).skip(offset).limit(limit, (err, results) => {
+            Source.count(null, (err, count) => {
+                Source.find(null, { type: 0 }).sort({ 'updatedAt': -1 }).skip(offset).limit(limit).exec((err, results) => {
                     res.charSet('utf-8');
                     res.paginate.send(results, count);
                 })

@@ -5,7 +5,7 @@ config.newsapi = {};
 
 config.HOST = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1"
 config.PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-config.SPIDER_INTERVAL = 10 * 1000;
+config.SPIDER_INTERVAL = 300 * 1000;
 config.DATABASE_URL = process.env.DATABASE_URL || "mongodb://127.0.0.1:27017/instant"
 
 // jandan

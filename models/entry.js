@@ -5,7 +5,7 @@ var entrySchema = mongoose.Schema({
     eid: String,
     title: String,
     url: String,
-    image: [String],
+    images: [String],
     description: String,
     content: String,
     source: { type: String, ref: 'Source' }
