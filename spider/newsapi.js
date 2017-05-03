@@ -1,54 +1,43 @@
 var rp = require('request-promise-native');
-var models = require('../models')
 var config = require('../config')
+var mongojs = require('mongojs')
+
+var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
 
 exports.getAllNews = async function () {
-    await getNewsSource()
-
-
+    var newsSource = await getNewsSource()
+    newsSource.forEach((ns) => {
+        if (ns.sortBysAvailable.indexOf("latest") > -1) var sortBy = "latest"
+        else var sortBy = "top"
+        var article_url = config.newsapi.ARTICLE_URL + '?apiKey=' + config.newsapi.API_KEY + '&source=' + ns.id + '&sortBy=' + sortBy
+        var source = { _id: ns.id, name: ns.name, link: article_url, description: ns.description, type: "newsapi" }
+        db.source.save(source, async (err, doc) => {
+            if (err) console.log(err)
+            var news = await getNews(source.link)
+            news.forEach((article) => {
+                var entry = {
+                    eid: article.url,
+                    title: article.title,
+                    images: [article.urlToImage],
+                    url: article.url,
+                    description: article.description,
+                    published_at: article.publishedAt,
+                    source_id: source._id
+                }
+                db.entry.update({ eid: article.url, source_id: source._id }, entry, { upsert: true }, (err) => { if (err) console.log(err) })
+            })
+        })
+    })
 }
 
-async function getNewsSource() {
-    // var response = await rp({ uri: config.newsapi.SOURCE_URL, json: true })
-    // response.sources.forEach()
-    // await response.sources.forEach(async (ns) => {
-    //     await models.Source.findOrCreate({
-    //         where: { sid: ns.id, name: ns.name, link: ns.url, description: ns.description, type: "newsapi" }, raw: true
-    //     }).spread(async (instance, created) => {
-    //         if (ns.sortBysAvailable.indexOf("latest") > -1) {
-    //             //In the array!
-    //             var sortBy = "latest"
-    //         } else {
-    //             //Not in the array
-    //             var sortBy = "top"
-    //         }
-    //         var article_url = config.newsapi.ARTICLE_URL + '?apiKey=' + config.newsapi.API_KEY + '&source=' + instance.sid + '&sortBy=' + sortBy
-    //         var res = await rp({ uri: article_url, json: true })
-    //         await res.articles.forEach(async (article) => {
-    //             var entry = {
-    //                 eid: article.url,
-    //                 title: article.title,
-    //                 link: article.url,
-    //                 description: article.description,
-    //                 published_at: article.publishedAt,
-    //                 source_id: instance.id
-    //             }
-    //             // console.log(entry)
-    //             await models.Entry.findOrCreate({ where: entry }).spread(async (instance, created) => {
-    //                 if (created && article.urlToImage != null) {
-    //                     image = { url: article.urlToImage, entry_id: instance.id }
-    //                     await models.Image.create(image).catch(function (err) {
-    //                         console.log(err)
-    //                     })
-    //                 }
-    //                 console.log(created)
-    //             }).catch(function (err) {
-    //                 console.log(err)
-    //             })
-    //         })
-    //     }).catch(function (err) {
-    //         console.log(err)
-    //     })
 
-    // })
+
+async function getNewsSource() {
+    var response = await rp({ uri: config.newsapi.SOURCE_URL, json: true })
+    return response.sources
+}
+
+async function getNews(url) {
+    var response = await rp({ uri: url, json: true })
+    return response.articles
 }

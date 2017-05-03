@@ -32,13 +32,13 @@ function saveAllComment(data, type) {
     } else if (type == JandanType.OOXX) {
         var source = { _id: "jandan-ooxx", name: "Jandan OOXX", link: config.jandan.OOXX_API_URL, description: "Jandan Meizi pics.", type: "api" }
     }
-    db.source.update({ _id: source._id }, source, { upsert: true }, (err) => {
+    db.source.save(source, (err) => {
         data.forEach((e) => {
             var entry = {
                 eid: e.comment_ID,
                 description: e.text_content.trim(),
                 content: e.comment_content.trim(),
-                pics: e.pics,
+                images: e.pics,
                 score: getScore(e.vote_positive, e.vote_negative),
                 source_id: source._id
             }
