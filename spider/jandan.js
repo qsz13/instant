@@ -40,6 +40,7 @@ function saveAllComment(data, type) {
                 content: e.comment_content.trim(),
                 images: e.pics,
                 score: getScore(e.vote_positive, e.vote_negative),
+                publishedAt: new Date(e.comment_date_gmt),
                 source_id: source._id,
                 updatedAt: new Date()
 

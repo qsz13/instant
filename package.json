@@ -22,7 +22,7 @@
   "homepage": "https://github.com/qsz13/instant#readme",
   "dependencies": {
     "feedparser": "^2.2.0",
-    "mongojs": "^2.4.0",
+    "mongoose": "^4.9.7",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
     "restify": "^4.3.0",

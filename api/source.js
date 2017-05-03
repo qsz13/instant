@@ -2,8 +2,8 @@
 var models = require("../models")
 // var rssspider = require("../spider/rss")
 var config = require('../config')
-var mongojs = require('mongojs')
-var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
+// var mongojs = require('mongojs')
+// var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
 
 module.exports = (server) => {
 
@@ -12,7 +12,7 @@ module.exports = (server) => {
             var offset = (req.paginate.page - 1) * req.paginate.per_page
             var limit = req.paginate.per_page
             db.source.count(null, (err, count) => {
-                db.source.find().sort({ 'updated_at': -1 }).skip(offset).limit(limit, (err, results) => {
+                db.source.find().sort({ 'updatedAt': -1 }).skip(offset).limit(limit, (err, results) => {
                     res.charSet('utf-8');
                     res.paginate.send(results, count);
                 })
