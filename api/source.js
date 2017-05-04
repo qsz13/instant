@@ -10,12 +10,14 @@ module.exports = (server) => {
         try {
             var offset = (req.paginate.page - 1) * req.paginate.per_page
             var limit = req.paginate.per_page
-            Source.count(null, (err, count) => {
-                Source.find(null, { type: 0 }).sort({ 'updatedAt': -1 }).skip(offset).limit(limit).exec((err, results) => {
-                    res.charSet('utf-8');
-                    res.paginate.send(results, count);
-                })
-            })
+
+            const results =
+                await Source.find(null, { type: 0 })
+                    .sort({ 'updatedAt': -1 }).skip(offset).limit(limit).exec()
+
+            res.charSet('utf-8');
+            res.paginate.send(results, count);
+            
         } catch (error) {
             res.send({ 'code': 'failed', 'message': error.message })
         }
