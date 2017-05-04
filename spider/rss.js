@@ -1,31 +1,37 @@
 'use strict';
 
 var FeedParser = require('feedparser');
-var request = require('request');
-var models = require('../models')
+var rp = require('request-promise-native');
+var Source = require('../models/source')
+var Entry = require('../models/entry')
 
-function getRSSFeed(url, callback) {
-    var req = request(url, { timeout: 10000, pool: false });
-    req.setMaxListeners(50);
-    // Some feeds do not respond without user-agent and accept headers.
-    req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
-    req.setHeader('accept', 'text/html,application/xhtml+xml');
+async function getRSSFeed(url, callback) {
+    var options = {
+        uri:url,
+        headers:{
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
+            'accept': 'text/html,application/xhtml+xml'
+        },
+        timeout: 10000,
+        pool: false,
+        resolveWithFullResponse: true
+    };
+    var res = await rp(options)
 
-    var feedparser = new FeedParser();
 
-    // Define our handlers
-    req.on('error', (err) => { console.log(err); });
-    req.on('response', function (res) {
-        if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
-        var encoding = res.headers['content-encoding'] || 'identity'
-            , charset = getParams(res.headers['content-type'] || '').charset;
-        res = maybeDecompress(res, encoding);
-        res = maybeTranslate(res, charset);
-        res.pipe(feedparser);
+    if (res.statusCode != 200) throw new Error('Bad status code');
+    var encoding = res.headers['content-encoding'] || 'identity'
+        , charset = getParams(res.headers['content-type'] || '').charset;
+    res = maybeDecompress(res, encoding)
+    res = maybeTranslate(res, charset)
+    
+    var feedparser = new FeedParser()
+    res.pipe(feedparser)
+
+    return await new Promise((resolve, reject) => {
+        feedparser.on('error', (err) => { reject(err); })
+        feedparser.on('readable', function () { resolve(this) })
     });
-
-    feedparser.on('error', (err) => { console.log(err); });
-    feedparser.on('readable', function () { callback(this) });
 }
 
 function getParams(str) {
@@ -73,45 +79,44 @@ function maybeTranslate(res, charset) {
 
 
 exports.saveRSSSource = async function (rss) {
-    return await getRSSFeed(rss.link, (stream) => {
-        var meta = stream.meta
-        if (rss.name == null) {
-            rss.name = meta.title
-        }
-        if (rss.description == null) {
-            rss.description = meta.description
-        }
-        if (rss.image == null) {
-            rss.image = meta.image.url
-        }
-        return models.Source.upsert(rss).catch(function (err) {
-            console.log(err)
-        })
-    })
+    var stream = await getRSSFeed(rss.link)
 
+    var meta = stream.meta
+    if (rss.name == null) {
+        rss.name = meta.title
+    }
+    if (rss.description == null) {
+        rss.description = meta.description
+    }
+    if (rss.image == null) {
+        rss.image = meta.image.url
+    }
+    
+    rss._id = rss.link
+    rss.type = 'rss'
+    await Source.updateOne({ _id: rss._id }, rss, { upsert: true })
 }
 
 exports.getAllRss = async function () {
-    var sourceList = await models.Source.getSourcesOfType("rss")
+    var sourceList = await Source.find({'type':'rss'})
 
-    sourceList.forEach((source) => {
-        getRSSFeed(source.link, function (stream) {
-            var item;
-            while (item = stream.read()) {
-                var entry = {
-                    eid: item.guid,
-                    title: item.title,
-                    link: item.link,
-                    description: item.description,
-                    content: item.content,
-                    source_id: source.id
-                }
-                models.Entry.saveEntry(entry).catch(function (err) {
-                    console.log(err)
-                });
+    await Promise.all(sourceList.map(async (source) => {
+        var stream = await getRSSFeed(source.link)
+
+        var item;
+        while (item = stream.read()) {
+            var entry = {
+                eid: item.guid,
+                title: item.title,
+                link: item.link,
+                description: item.description,
+                content: item.content,
+                source: source.id
             }
 
-        })
-    })
+            await Entry.updateOne({ eid: entry.eid, source: entry.source }, entry, { upsert: true })
+        }
+
+    }))
 
 }
