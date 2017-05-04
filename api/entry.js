@@ -4,8 +4,6 @@ var config = require('../config')
 var Entry = require('../models/entry')
 var Source = require('../models/source')
 
-// var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
-
 module.exports = (server) => {
 
     server.get('/entry', async (req, res, next) => {

@@ -2,8 +2,6 @@
 var models = require("../models")
 // var rssspider = require("../spider/rss")
 var config = require('../config')
-// var mongojs = require('mongojs')
-// var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
 var Source = require('../models/source')
 
 module.exports = (server) => {

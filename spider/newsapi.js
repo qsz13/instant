@@ -18,7 +18,7 @@ exports.getAllNews = async function () {
         Source.update({ _id: ns.id }, source, { upsert: true }, async (err) => {
             if (err) console.log(err)
             var news = await getNews(source.link)
-            news.forEach((article) => {
+            news.forEach(async (article) => {
                 var entry = {
                     eid: article.url,
                     title: article.title,
@@ -27,9 +27,9 @@ exports.getAllNews = async function () {
                     description: article.description,
                     source: source._id
                 }
-                Entry.update({ eid: article.url, source: source._id }, entry, { upsert: true }, (err) => {
+                await Entry.update({ eid: article.url, source: source._id }, entry, { upsert: true }, async (err) => {
                     if (err) console.log(err)
-                    Entry.updateOne({ eid: article.url, source: source._id }, { createdAt: article.publishedAt }, (err) => {
+                    await Entry.updateOne({ eid: article.url, source: source._id }, { createdAt: article.publishedAt }, (err) => {
                         if (err) console.log(err)
                     })
                 })

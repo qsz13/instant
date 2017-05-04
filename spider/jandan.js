@@ -1,8 +1,7 @@
 var rp = require('request-promise-native');
 var config = require('../config')
-var mongojs = require('mongojs')
-
-var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
+var Source = require('../models/source')
+var Entry = require('../models/entry')
 
 JandanType = {
     PIC: 0,
@@ -26,31 +25,31 @@ async function getCommentByAPI(jandanType) {
 
 
 function saveAllComment(data, type) {
-    // console.log(data)
     if (type == JandanType.PIC) {
         var source = { _id: "jandan-pic", name: "Jandan Pic", link: config.jandan.PIC_API_URL, description: "Jandan boring pics.", type: "api", updatedAt: new Date() }
     } else if (type == JandanType.OOXX) {
         var source = { _id: "jandan-ooxx", name: "Jandan OOXX", link: config.jandan.OOXX_API_URL, description: "Jandan Meizi pics.", type: "api", updatedAt: new Date() }
     }
-    db.source.update({ _id: source._id }, { $set: source, $setOnInsert: { createdAt: new Date() } }, { upsert: true }, (err) => {
-        data.forEach((e) => {
-            var entry = {
-                eid: e.comment_ID,
-                description: e.text_content.trim(),
-                content: e.comment_content.trim(),
-                images: e.pics,
-                score: getScore(e.vote_positive, e.vote_negative),
-                publishedAt: new Date(e.comment_date_gmt),
-                source_id: source._id,
-                updatedAt: new Date()
 
+    Source.update({ _id: source._id }, source, { upsert: true }, async (err) => {
+        if (err) console.log(err)
+        data.forEach(async (comment) => {
+            var entry = {
+                eid: comment.comment_ID,
+                description: comment.text_content.trim(),
+                content: comment.comment_content.trim(),
+                images: comment.pics,
+                score: getScore(comment.vote_positive, comment.vote_negative),
+                source: source._id
             }
-            db.entry.update({ eid: e.comment_ID, source_id: source._id }, { $set: entry, $setOnInsert: { createdAt: new Date() } }, { upsert: true }, (err) => {
-                if (err) console.log(err);
+            await Entry.update({ eid: entry.eid, source: entry.source }, entry, { upsert: true }, async (err) => {
+                if (err) console.log(err)
+                await Entry.updateOne({ eid: entry.eid, source: entry.source }, { createdAt: new Date(comment.comment_date_gmt) }, (err) => {
+                    if (err) console.log(err)
+                })
             })
         })
     })
-
 }
 
 
