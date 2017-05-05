@@ -1,8 +1,8 @@
 'use strict';
 
 var FeedParser = require('feedparser')
-var Iconv = require('iconv').Iconv
-var zlib = require('zlib')
+// var Iconv = require('iconv').Iconv
+// var zlib = require('zlib')
 var request = require('request')
 var Source = require('../models/source')
 var Entry = require('../models/entry')
