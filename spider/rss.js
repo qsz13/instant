@@ -1,7 +1,9 @@
 'use strict';
 
-var FeedParser = require('feedparser');
-var rp = require('request-promise-native');
+var FeedParser = require('feedparser')
+var Iconv = require('iconv').Iconv
+var zlib = require('zlib')
+var request = require('request')
 var Source = require('../models/source')
 var Entry = require('../models/entry')
 
@@ -13,11 +15,15 @@ async function getRSSFeed(url, callback) {
             'accept': 'text/html,application/xhtml+xml'
         },
         timeout: 10000,
-        pool: false,
-        resolveWithFullResponse: true
+        pool: false
     };
-    var res = await rp(options)
+    var req = request(options)
+    req.setMaxListeners(50);
 
+    var res = await new Promise((resolve, reject) => {
+        req.on('error', (err) => { reject(err) })
+        req.on('response', res => { resolve(res) })
+    })
 
     if (res.statusCode != 200) throw new Error('Bad status code');
     var encoding = res.headers['content-encoding'] || 'identity'
@@ -29,8 +35,8 @@ async function getRSSFeed(url, callback) {
     res.pipe(feedparser)
 
     return await new Promise((resolve, reject) => {
-        feedparser.on('error', (err) => { reject(err); })
-        feedparser.on('readable', function () { resolve(this) })
+        feedparser.on('error', (err) => { reject(err) })
+        feedparser.on('readable', () => { resolve(feedparser) })
     });
 }
 
