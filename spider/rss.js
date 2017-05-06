@@ -8,7 +8,7 @@ var Source = require('../models/source')
 var Entry = require('../models/entry')
 
 async function getRSSFeed(url, callback) {
-    var options = {
+    const options = {
         uri:url,
         headers:{
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
@@ -17,27 +17,25 @@ async function getRSSFeed(url, callback) {
         timeout: 10000,
         pool: false
     };
-    var req = request(options)
-    req.setMaxListeners(50);
-
-    var res = await new Promise((resolve, reject) => {
-        req.on('error', (err) => { reject(err) })
-        req.on('response', res => { resolve(res) })
-    })
-
-    if (res.statusCode != 200) throw new Error('Bad status code');
-    var encoding = res.headers['content-encoding'] || 'identity'
-        , charset = getParams(res.headers['content-type'] || '').charset;
-    res = maybeDecompress(res, encoding)
-    res = maybeTranslate(res, charset)
-    
-    var feedparser = new FeedParser()
-    res.pipe(feedparser)
 
     return await new Promise((resolve, reject) => {
-        feedparser.on('error', (err) => { reject(err) })
-        feedparser.on('readable', () => { resolve(feedparser) })
-    });
+        const req = request(options)
+        req.setMaxListeners(50);
+        req.on('error', (err) => { reject(err) })
+        req.on('response', res => { 
+
+            if (res.statusCode != 200) throw new Error('Bad status code');
+            const encoding = res.headers['content-encoding'] || 'identity'
+                , charset = getParams(res.headers['content-type'] || '').charset;
+            res = maybeDecompress(res, encoding)
+            res = maybeTranslate(res, charset)
+            
+            const feedparser = new FeedParser()
+            feedparser.on('error', (err) => { reject(err) })
+            feedparser.on('readable', () => { resolve(feedparser) })
+            res.pipe(feedparser)
+         })
+    })
 }
 
 function getParams(str) {
@@ -115,9 +113,10 @@ exports.getAllRss = async function () {
                 eid: item.guid,
                 title: item.title,
                 link: item.link,
-                description: item.description,
-                content: item.content,
-                source: source.id
+                description: item.summary, // (frequently, an excerpt of the article content) 
+                content: item.description, // (frequently, the full article content)
+                source: source.id,
+                createdAt: item.date
             }
 
             await Entry.updateOne({ eid: entry.eid, source: entry.source }, entry, { upsert: true })
