@@ -29,8 +29,15 @@ exports.getAllNews = async function () {
                 source: source._id,
                 createdAt: article.publishedAt
             }
-            if (source._id == "usa-today") entry.createdAt = new Date();
-            await Entry.updateOne({ eid: article.url, source: source._id }, entry, { upsert: true })
+            if (source._id == "usa-today") {
+                delete entry.createdAt
+                await Entry.updateOne({ eid: article.url, source: source._id }, {
+                    $set: entry,
+                    $setOnInsert: { createdAt: new Date() }
+                }, { upsert: true })
+            }
+            else
+                await Entry.updateOne({ eid: article.url, source: source._id }, entry, { upsert: true })
         }))
     }))
 }
