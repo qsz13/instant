@@ -10,16 +10,16 @@ var Entry = require('../models/entry')
 
 exports.getAllNews = async function () {
     var newsSource = await getNewsSource()
-    await Promise.all(newsSource.map(async (ns)=>{
+    await Promise.all(newsSource.map(async (ns) => {
         if (ns.sortBysAvailable.indexOf("latest") > -1) var sortBy = "latest"
         else var sortBy = "top"
         var article_url = config.newsapi.ARTICLE_URL + '?apiKey=' + config.newsapi.API_KEY + '&source=' + ns.id + '&sortBy=' + sortBy
         var source = new Source({ _id: ns.id, name: ns.name, link: article_url, description: ns.description, type: "newsapi" })
-        
+
         await Source.update({ _id: ns.id }, source, { upsert: true })
 
         var news = await getNews(source.link)
-        await Promise.all(news.map(async (article)=>{
+        await Promise.all(news.map(async (article) => {
             var entry = {
                 eid: article.url,
                 title: article.title,
@@ -29,7 +29,7 @@ exports.getAllNews = async function () {
                 source: source._id,
                 createdAt: article.publishedAt
             }
-            
+            if (source._id == "usa-today") entry.createdAt = new Date();
             await Entry.updateOne({ eid: article.url, source: source._id }, entry, { upsert: true })
         }))
     }))
