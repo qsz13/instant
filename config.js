@@ -14,7 +14,7 @@ config.jandan.PIC_API_URL = "http://jandan.net/?oxwlxojflwblxbsapi=jandan.get_pi
 config.jandan.URL = "http://jandan.net"
 
 // newsapi
-config.newsapi.SOURCE_URL = "https://newsapi.org/v1/sources?language=en"
+config.newsapi.SOURCE_URL = "https://newsapi.org/v1/sources?language=en&country=us"
 config.newsapi.ARTICLE_URL = "https://newsapi.org/v1/articles"
 config.newsapi.API_KEY = "00e60e21d3b04652b7cdb57b94d478ba"
 
