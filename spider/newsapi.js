@@ -4,10 +4,6 @@ var mongoose = require('mongoose');
 var Source = require('../models/source')
 var Entry = require('../models/entry')
 
-
-
-// var db = mongojs(config.DATABASE_URL, ['source', 'entry'])
-
 exports.getAllNews = async function () {
     var newsSource = await getNewsSource()
     await Promise.all(newsSource.map(async (ns) => {
@@ -41,7 +37,6 @@ exports.getAllNews = async function () {
         }))
     }))
 }
-
 
 
 async function getNewsSource() {
