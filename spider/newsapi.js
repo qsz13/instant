@@ -25,7 +25,7 @@ exports.getAllNews = async function () {
                 source: source._id,
                 createdAt: article.publishedAt
             }
-            if (source._id == "usa-today") {
+            if (source._id == "usa-today" || article.publishedAt == null) {
                 delete entry.createdAt
                 await Entry.updateOne({ eid: article.url, source: source._id }, {
                     $set: entry,
