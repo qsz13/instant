@@ -8,4 +8,9 @@ var spider = new Spider();
 server.listen(config.PORT, config.HOST, function () {
     console.log("Listening on " + config.HOST + ", port " + config.PORT)
 });
-spider.start();
+
+try {
+    spider.start();
+} catch (err) {
+    console.log(err)
+}
