@@ -6,7 +6,7 @@ var Source = require('../models/source')
 
 module.exports = (server) => {
 
-    server.get('/entry', async (req, res, next) => {
+    server.get(config.API_PATH+'/entry', async (req, res, next) => {
         try {
             let offset = (req.paginate.page - 1) * req.paginate.per_page
             let limit = req.paginate.per_page
@@ -27,7 +27,7 @@ module.exports = (server) => {
     });
 
 
-    server.get('/source/:id/entry', async (req, res, next) => {
+    server.get(config.API_PATH+'/source/:id/entry', async (req, res, next) => {
         try {
             var offset = (req.paginate.page - 1) * req.paginate.per_page
             var limit = req.paginate.per_page

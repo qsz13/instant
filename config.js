@@ -3,10 +3,11 @@ var config = {};
 config.jandan = {};
 config.newsapi = {};
 
-config.HOST = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1"
-config.PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+config.HOST = process.env.HOST_IP || "127.0.0.1"
+config.PORT = process.env.PORT || 8080;
 config.SPIDER_INTERVAL = 300 * 1000;
 config.DATABASE_URL = process.env.DATABASE_URL || "mongodb://127.0.0.1:27017/instant"
+config.API_PATH = "/instant"
 
 // jandan
 config.jandan.OOXX_API_URL = "http://jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page=1"

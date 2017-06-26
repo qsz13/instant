@@ -6,7 +6,7 @@ var Source = require('../models/source')
 
 module.exports = (server) => {
 
-    server.get('/source', async (req, res, next) => {
+    server.get(config.API_PATH+'/source', async (req, res, next) => {
         try {
             let offset = (req.paginate.page - 1) * req.paginate.per_page
             let limit = req.paginate.per_page
@@ -26,7 +26,7 @@ module.exports = (server) => {
     });
 
 
-    server.get('/source/:id', async (req, res, next) => {
+    server.get(config.API_PATH+'/source/:id', async (req, res, next) => {
         try {
             let result = await Source.findOne({ _id: req.params.id }).exec()
             if (result == null) result = {}
@@ -38,7 +38,7 @@ module.exports = (server) => {
         }
     })
 
-    server.post("/rss-source", async (req, res, next) => {
+    server.post(config.API_PATH+"/rss-source", async (req, res, next) => {
         if (req.body == null || req.body.link == null) {
             res.send({ 'code': 'failed', 'message': 'cannot parse request body.' })
         }
