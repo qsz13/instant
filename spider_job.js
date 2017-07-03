@@ -42,7 +42,10 @@ jobs.process('newsapi update',async (job,done)=>{
     done()
 })
 
-jobs.on('failed attempt', function(errorMessage, doneAttempts){
+jobs.on('complete', function(errorMessage, doneAttempts){
+  console.log('Job completed\n'+new Date());
+
+}).on('failed attempt', function(errorMessage, doneAttempts){
   console.log('Job failed\n'+errorMessage);
 
 }).on('failed', function(errorMessage){

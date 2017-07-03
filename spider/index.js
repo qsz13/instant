@@ -12,30 +12,16 @@ class Spider {
     }
 
     async jandanAPISpider() {
-        try {
-            await jandan.getAllComment()
-        } catch (err) {
-            console.log(err)
-        }
+        await jandan.getAllComment()
     }
 
     async rssSpider() {
-        try {
-            await rss.getAllRss()
-        } catch (err) {
-            console.log(err)
-        }
+        await rss.getAllRss()
     }
 
     async newsapiSpider() {
-        try {
-            await newsapi.getAllNews()
-
-        } catch (err) {
-            console.log(err)
-        }
+        await newsapi.getAllNews()
     }
-
 
 }
 
