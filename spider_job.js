@@ -50,9 +50,9 @@ jobs.on('failed attempt', function(errorMessage, doneAttempts){
 })
 
 // start the UI
-const app = express.createServer();
-//app.use( express.basicAuth( 'daniel', 'jeffrey' ) );
-app.use( kue.app );
-app.listen( config.KUE_PORT, config.HOST, ()=> {
-    console.log("Kue UI listening on " + config.HOST + ", port " + config.KUE_PORT)
-});
+// const app = express.createServer();
+// app.use( express.basicAuth( 'daniel', 'jeffrey' ) );
+// app.use( kue.app );
+// app.listen( config.KUE_PORT, config.HOST, ()=> {
+//     console.log("Kue UI listening on " + config.HOST + ", port " + config.KUE_PORT)
+// });
