@@ -1,30 +1,19 @@
-var jandan = require("./jandan")
-var rss = require("./rss")
-var newsapi = require("./newsapi")
-var config = require("../config")
+const jandan = require("./jandan")
+const rss = require("./rss")
+const newsapi = require("./newsapi")
+const config = require("../config")
+const models = require("../models")
 
 class Spider {
-    constructor() {
-        this.jandanAPISpider = this.jandanAPISpider.bind(this);
-    }
-
     async start() {
-        while (true) {
-            await this.jandanAPISpider();
-            await this.rssSpider();
-            await this.newsapiSpider();
-            await this.timeout(config.SPIDER_INTERVAL);
-        }
+        await this.jandanAPISpider()
+        await this.rssSpider()
+        await this.newsapiSpider()
     }
-
-    timeout(ms) {
-        return new Promise((resolve, reject) => setTimeout(resolve, ms));
-    }
-
 
     async jandanAPISpider() {
         try {
-            await jandan.getAllComment();
+            await jandan.getAllComment()
         } catch (err) {
             console.log(err)
         }
@@ -32,7 +21,7 @@ class Spider {
 
     async rssSpider() {
         try {
-            await rss.getAllRss();
+            await rss.getAllRss()
         } catch (err) {
             console.log(err)
         }
@@ -40,7 +29,7 @@ class Spider {
 
     async newsapiSpider() {
         try {
-            await newsapi.getAllNews();
+            await newsapi.getAllNews()
 
         } catch (err) {
             console.log(err)
@@ -50,4 +39,5 @@ class Spider {
 
 }
 
-module.exports = Spider;
+
+module.exports = Spider
