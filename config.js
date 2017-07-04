@@ -9,7 +9,7 @@ config.KUE_PORT = process.env.KUE_PORT || 8081
 config.SPIDER_INTERVAL = 5 * 60 * 1000
 config.DATABASE_URL = process.env.DATABASE_URL || "mongodb://127.0.0.1:27017/instant"
 config.API_PATH  = process.env.API_PATH || "/instant"
-config.REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6391"
+config.REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379"
 config.REDIS_PREFIX = process.env.REDIS_PREFIX || "instant"
 
 // jandan
