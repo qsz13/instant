@@ -3,9 +3,9 @@ const rss = require("./rss")
 const newsapi = require("./newsapi")
 const config = require("../config")
 const models = require("../models")
-const jobs = require('../queue')
+const queue = require('../queue')
 
-jobs.process('jandan update', (job, done) => {
+queue.process('jandan update', (job, done) => {
     try {
         jandan.getAllComment()
         done()
@@ -14,7 +14,7 @@ jobs.process('jandan update', (job, done) => {
     }
 })
 
-jobs.process('rss update', (job, done) => {
+queue.process('rss update', (job, done) => {
     try {
         rss.getAllRss()
         done()
@@ -23,7 +23,7 @@ jobs.process('rss update', (job, done) => {
     }
 })
 
-jobs.process('newsapi update', (job, done) => {
+queue.process('newsapi update', (job, done) => {
     try {
         newsapi.getAllNews()
         done()
@@ -35,20 +35,45 @@ jobs.process('newsapi update', (job, done) => {
 class Spider {
 
     start() {
-        this.update = setInterval(regular_update, config.SPIDER_INTERVAL)
+        update_jandan()
+        update_rss()
+        update_newsapi()
     }
 
-    // Do a regular update
-    regular_update() {
-        jobs.create('jandan update', {
+    update_jandan(){
+        return queue.create('jandan update', {
             title: 'Regular update all sources from jandan'
-        }).attempts(3).removeOnComplete(true).save()
-        jobs.create('rss update', {
+        })
+        .attempts(3)
+        .delay(config.SPIDER_INTERVAL)
+        .removeOnComplete(true)
+        .on('complete',(result)=>update_jandan())
+        .on('failed', (errorMessage)=>console.log('jandan job failed:%s',errorMessage))
+        .save()
+    }
+
+    update_rss(){
+        return queue.create('rss update', {
             title: 'Regular update all sources from rss'
-        }).attempts(3).removeOnComplete(true).save()
-        jobs.create('newsapi update', {
+        })
+        .attempts(3)
+        .delay(config.SPIDER_INTERVAL)
+        .removeOnComplete(true)
+        .on('complete',(result)=>update_rss())
+        .on('failed', (errorMessage)=>console.log('rss job failed:%s',errorMessage))
+        .save()
+    }
+
+    update_newsapi(){
+        return queue.create('newsapi update', {
             title: 'Regular update all sources from newsapi'
-        }).attempts(3).removeOnComplete(true).save()
+        })
+        .attempts(3)
+        .delay(config.SPIDER_INTERVAL)
+        .removeOnComplete(true)
+        .on('complete',(result)=>update_newsapi())
+        .on('failed', (errorMessage)=>console.log('newsapi job failed:%s',errorMessage))
+        .save()
     }
 }
 
