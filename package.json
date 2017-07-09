@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node instant.js",
-    "spider": "node spider_job.js",
+    "spider": "node tasks.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/qsz13/instant#readme",
   "dependencies": {
+    "exponent-server-sdk": "^2.3.1",
     "feedparser": "^2.2.0",
+    "firebase-admin": "^5.0.0",
     "kue": "^0.11.6",
     "mongoose": "^4.9.7",
     "request": "^2.81.0",
@@ -30,5 +32,11 @@
     "restify": "^4.3.0",
     "restify-paginate": "0.0.4",
     "restify-plugins": "^1.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.2.0",
+    "express": "^4.15.3"
   }
 }
