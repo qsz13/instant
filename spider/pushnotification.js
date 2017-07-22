@@ -2,6 +2,7 @@ const Expo = require('exponent-server-sdk');
 const queue = require('../queue');
 const Source = require('../models/source');
 const Entry = require('../models/entry');
+const User = require('../models/user'); // Needs to import for populating
 // const util = require('util');
 
 // const setTimeoutPromise = util.promisify(setTimeout);
