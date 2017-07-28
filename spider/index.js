@@ -27,7 +27,7 @@ queue.process('rss update', async (job, done) => {
 
 queue.process('newsapi update', async (job, done) => {
   try {
-    await newsapi.getAllNews();
+    await newsapi.getAllNews(job.progress);
     done();
   } catch (error) {
     done(error);
