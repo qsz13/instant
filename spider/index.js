@@ -27,11 +27,8 @@ queue.process('rss update', async (job, done) => {
 
 queue.process('newsapi update', async (job, done) => {
   try {
-    const prev = await Source.find({ type: 'newsapi' });
     await newsapi.getAllNews();
-    const curr = await Source.find({ type: 'newsapi' });
-    const changes = curr - prev;
-    done(changes);
+    done();
   } catch (error) {
     done(error);
   }
