@@ -18,14 +18,25 @@ async function getNews(url) {
 exports.getAllNews = async (report) => {
   const newsSource = await getNewsSource();
   let progress = 0;
-  report(progress, newsSource.length);
-  await Promise.all(newsSource.map(async (ns) => {
+  const total = newsSource.length * 2;
+  report(progress, total);
+
+  // Update news sources
+  const sources = await Promise.all(newsSource.map(async (ns) => {
     const sortBy = ns.sortBysAvailable.indexOf('latest') > -1 ? 'latest' : 'top';
     const articleUrl = `${config.newsapi.ARTICLE_URL}?apiKey=${config.newsapi.API_KEY}&source=${ns.id}&sortBy=${sortBy}`;
     const source = new Source({ _id: ns.id, name: ns.name, link: articleUrl, description: ns.description, type: 'newsapi' });
 
     await Source.update({ _id: ns.id }, source, { upsert: true });
 
+    progress += 1;
+    report(progress, total);
+
+    return source;
+  }));
+
+  // Fetch news for every source
+  await Promise.all(sources.map(async (source) => {
     const news = await getNews(source.link);
     await Promise.all(news.map(async (article) => {
       const entry = {
@@ -46,10 +57,12 @@ exports.getAllNews = async (report) => {
       } else {
         await Entry.updateOne({ eid: article.url, source: source._id }, entry, { upsert: true });
       }
-    }));
 
-    progress += 1;
-    report(progress, newsSource.length);
+      progress += 1;
+      report(progress, total);
+    }));
   }));
+
+  report(total, total);
 };
 
