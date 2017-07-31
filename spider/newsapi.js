@@ -57,10 +57,11 @@ exports.getAllNews = async (report) => {
       } else {
         await Entry.updateOne({ eid: article.url, source: source._id }, entry, { upsert: true });
       }
-
-      progress += 1;
-      report(progress, total);
     }));
+
+
+    progress += 1;
+    report(progress, total);
   }));
 
   report(total, total);
